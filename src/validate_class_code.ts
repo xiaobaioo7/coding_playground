@@ -40,7 +40,7 @@ function validate_class_code(
   }
 
   // loop through all distracting words and invalidate code for first occurrance of the word
-  for (let word of distracting_words) {
+  for (const word of distracting_words) {
     const wordLength = word.length
     // word's length is longer code's, skip to next word 
     if (wordLength > codeLength) {
