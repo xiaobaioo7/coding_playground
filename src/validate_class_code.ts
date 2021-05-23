@@ -1,6 +1,27 @@
 const CODE_LENGTH = 6
 const VALID_CODE_REGEX = new RegExp(`^[a-zA-Z0-9]{${CODE_LENGTH}}$`)
 const VALID_DISTRACTING_WORD_REGEX = new RegExp(`^[a-zA-Z0-9]{1,${CODE_LENGTH-1}}$`)
+let GLOBAL_EXISTING_CODE : undefined | string[]
+
+export const reset_existing_code = (): void => {
+  GLOBAL_EXISTING_CODE = undefined
+}
+
+export const process_code = (
+  code: string,
+  distracting_words: string[],
+): boolean => {
+  if (!GLOBAL_EXISTING_CODE) {
+    GLOBAL_EXISTING_CODE = []
+  }
+
+  if (validate_class_code(code, distracting_words, GLOBAL_EXISTING_CODE)) {
+    GLOBAL_EXISTING_CODE.push(code)
+    return true
+  }
+
+  return false
+}
 
 /**
  * Validate class code against existing codes and distracting words,
@@ -81,5 +102,7 @@ function validate_class_code(
 
   return true
 }
+
+
 
 export default validate_class_code

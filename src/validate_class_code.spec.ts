@@ -1,4 +1,4 @@
-import validate_class_code from './validate_class_code'
+import validate_class_code, { process_code, reset_existing_code } from './validate_class_code'
 
 describe('validate_class_code', () => {
   describe('when code is invalid', () => {
@@ -68,4 +68,18 @@ describe('validate_class_code', () => {
       expect(validate_class_code(code, distracting_words, existing_codes)).toBe(true)
     })
   })
+})
+
+describe('process_code', () => {
+  describe('when code does not contain distracting words', () => {
+    it('should return true when there is no existing code', () => {
+      expect(process_code('RAT123', ['rats'])).toBe(true)
+    })
+    it('should return false when same code is validated twice', () => {
+      reset_existing_code()
+      expect(process_code('RAT123', ['rats'])).toBe(true)
+      expect(process_code('RAT123', ['rats'])).toBe(false)
+    })
+  })
+
 })
