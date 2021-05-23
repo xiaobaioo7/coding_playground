@@ -1,5 +1,6 @@
 const CODE_LENGTH = 6
 const VALID_CODE_REGEX = new RegExp(`^[a-zA-Z0-9]{${CODE_LENGTH}}$`)
+const VALID_DISTRACTING_WORD_REGEX = new RegExp(`^[a-zA-Z0-9]{1,${CODE_LENGTH-1}}$`)
 
 /**
  * Validate class code against existing codes and distracting words,
@@ -41,12 +42,12 @@ function validate_class_code(
 
   // loop through all distracting words and invalidate code for first occurrance of the word
   for (const word of distracting_words) {
-    const wordLength = word.length
-    // word's length is longer code's, skip to next word 
-    if (wordLength > codeLength) {
+    // invalid word if it does not match with regex pattern
+    if (!VALID_DISTRACTING_WORD_REGEX.test(word)) {
       continue
     }
 
+    const wordLength = word.length
     const wordToLowercase = word.toLowerCase()
 
     // loop through each word's character to find matching in code

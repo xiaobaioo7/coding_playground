@@ -38,13 +38,17 @@ describe('validate_class_code', () => {
       ['RA1TSF', ['rats']],
       ['3RQATS', ['rats']],
       ['3RA2TS', ['darn', 'rats']],
+      ['aU7T77', ['rats', '877', '777']],
     ])('should return false when code %s contains distracting word in %s', (code: string, distracting_words: string[]) => {
       expect(validate_class_code(code, distracting_words, [])).toBe(false)
     })
   })
 
-  describe('when code length is shorter than all distracting words length', () => {
+  describe('when all distracting words are invalid', () => {
     it.each([
+      ['ABCDEF', ['']],
+      ['ABCDEF', ['   ']],
+      ['ABCDEF', ['+-.']],
       ['ABCDEF', ['abCdEfG']],
       ['ABCDEF', ['abCdEfG', 'ABcDeFgH']],
     ])('should return true when code %s and distracting words in %s', (code: string, distracting_words: string[]) => {
@@ -52,15 +56,16 @@ describe('validate_class_code', () => {
     })
   })
 
-  describe('when code does not contain any distracting word by (non-)consecutive order', () => {
+  describe('when code does not contain any distracting word by (non-)consecutive order and does not exist already', () => {
     it.each([
-      ['RAT123', ['rats']],
-      ['R1A2T3', ['rats']],
-      ['TSR1A2', ['rats']],
-      ['TS12RA', ['rats']],
-      ['AEU7CH', ['darn', 'rats', 'egg', 'fuzzy', 'kthx', 'haha', 'ugh', '777', 'cheese']],
-    ])('should return true when code %s and distracting words in %s', (code: string, distracting_words: string[]) => {
-      expect(validate_class_code(code, distracting_words, [])).toBe(true)
+      ['RAT123', ['rats'], []],
+      ['R1A2T3', ['rats'], []],
+      ['TSR1A2', ['rats'], []],
+      ['TS12RA', ['', '   ', '+-.', 'abCdEfG', 'rats'], []],
+      ['AEU7CH', ['darn', 'rats', 'egg', 'fuzzy', 'kthx', 'haha', 'ugh', '777', 'cheese'], ['aeU7cI']],
+      ['aU7T87', ['rats', '877', '777'], ['aU7T78', 'bU7T77']],
+    ])('should return true when code %s, distracting words in %s, and existing codes in %s', (code: string, distracting_words: string[], existing_codes: string[]) => {
+      expect(validate_class_code(code, distracting_words, existing_codes)).toBe(true)
     })
   })
 })
